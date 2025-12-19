@@ -33,7 +33,7 @@ export function Hero() {
           className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter mb-6 leading-tight flex flex-col items-center"
         >
           <span className="block text-foreground drop-shadow-sm mb-1">
-            Skip the Wait.
+            Skip the Wait0.
           </span>
           <span className="flex flex-wrap items-center justify-center gap-2 text-3xl md:text-5xl lg:text-6xl text-[var(--color-primary)] drop-shadow-[0_0_25px_rgba(0,255,100,0.4)]">
             <span>Unlock the</span>
