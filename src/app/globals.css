@@ -7,28 +7,36 @@
 @variant dark (&:where(.dark, .dark *));
 
 :root {
-  /* Brand Colors */
-  --color-primary: #00e05e;
-  /* Bright Green Accent */
-  --color-primary-hover: #00c754;
+  /* Brand Colors (PRD v2.0) */
+  --color-primary: #1DBF73;
+  --color-primary-hover: #16A557;
+
+  /* PRD Palette */
+  --color-background-primary: #FFFFFF;
+  --color-background-secondary: #F8F8F8;
+  --color-dark-neutral: #404145;
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #666666;
+  --color-border-divider: #E8E8E8;
+  --color-subtle-tint: #F0F7F4;
 
   /* Light Mode Defaults */
+  --card-bg: #FFFFFF;
+  --card-border: #E8E8E8;
 
-  --card-bg: rgba(255, 255, 255, 0.7);
-  --card-border: rgba(0, 0, 0, 0.1);
+  --muted: #F0F7F4;
+  --muted-foreground: #666666;
 
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  /* Shadow Levels (Light Mode) */
+  --shadow-level-1: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-level-2: 0 4px 16px rgba(0, 0, 0, 0.08);
+  /* Updated to match PRD general feel */
+  --shadow-level-3: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --shadow-level-4: 0 12px 32px rgba(0, 0, 0, 0.14);
+  --shadow-level-5: 0 16px 48px rgba(0, 0, 0, 0.17);
 
-  /* Shadow Levels (Light Mode - Reduced Opacity per PRD 3.2) */
-  --shadow-level-1: 0 2px 8px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-level-2: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.05);
-  --shadow-level-3: 0 8px 24px rgba(0, 0, 0, 0.11), 0 4px 8px rgba(0, 0, 0, 0.08);
-  --shadow-level-4: 0 12px 32px rgba(0, 0, 0, 0.14), 0 6px 12px rgba(0, 0, 0, 0.11);
-  --shadow-level-5: 0 16px 48px rgba(0, 0, 0, 0.17), 0 8px 16px rgba(0, 0, 0, 0.12);
-
-  --shadow-accent-glow: 0 8px 24px rgba(0, 224, 94, 0.1);
-  --shadow-popular: 0 20px 40px -15px rgba(0, 0, 0, 0.2), 0 0 30px -10px rgba(0, 224, 94, 0.3);
+  --shadow-accent-glow: 0 8px 24px rgba(29, 191, 115, 0.15);
+  --shadow-popular: 0 8px 24px rgba(29, 191, 115, 0.2);
 
   /* Brightness Tiers */
   --brightness-primary: 1.0;
@@ -36,7 +44,9 @@
   --brightness-tertiary: 0.7;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
+  /* #FFFFFF */
   --foreground: oklch(0.145 0 0);
+  /* #1A1A1A approx */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);

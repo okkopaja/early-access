@@ -5,6 +5,8 @@ import { Providers } from "@/components/Providers";
 import { ModalProvider } from "@/context/ModalContext";
 import { EarlyAccessModal } from "@/components/EarlyAccessModal";
 
+import { LightMeshBackground } from "@/components/LightMeshBackground";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -48,6 +50,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${raleway.variable} ${courierPrime.variable} antialiased`}
         suppressHydrationWarning
       >
+        <LightMeshBackground />
         <Providers>
           <ModalProvider>
             {children}

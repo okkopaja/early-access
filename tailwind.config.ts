@@ -16,6 +16,12 @@ const config: Config = {
                 background: "var(--background)",
                 foreground: "var(--foreground)",
             },
+            animation: {
+                spotlight: "spotlight 2s ease .75s 1 forwards",
+                "spin-slow": "spin 3s linear infinite",
+                "pulse-slow": "pulse 10s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                blob: "blob 20s infinite",
+            },
             keyframes: {
                 spotlight: {
                     "0%": {
@@ -27,10 +33,20 @@ const config: Config = {
                         transform: "translate(-50%,-40%) scale(1)",
                     },
                 },
-            },
-            animation: {
-                spotlight: "spotlight 2s ease .75s 1 forwards",
-                "spin-slow": "spin 3s linear infinite",
+                blob: {
+                    "0%": {
+                        transform: "translate(0px, 0px) scale(1)",
+                    },
+                    "33%": {
+                        transform: "translate(30px, -50px) scale(1.1)",
+                    },
+                    "66%": {
+                        transform: "translate(-20px, 20px) scale(0.9)",
+                    },
+                    "100%": {
+                        transform: "translate(0px, 0px) scale(1)",
+                    },
+                },
             },
         },
     },
@@ -67,4 +83,3 @@ function addVariablesForColors({ addBase, theme }: any) {
 }
 
 export default config;
-

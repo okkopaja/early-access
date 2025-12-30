@@ -1,50 +1,39 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, X } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const faqs = [
-    // PARTNER / BUSINESS QUESTIONS (The "Peace of Mind" Angle)
-    {
-        question: "What if the worker I hire doesn't show up?",
-        answer:
-            "We have a 98% show-up rate because our 'Reliability Score' system penalizes no-shows heavily. If it happens, our backup algorithm instantly alerts nearby top-rated talent to fill the gap within minutes.",
-    },
-    {
-        question: "Are these workers actually verified, or just random sign-ups?",
-        answer:
-            "They aren't random. Every pro on Fastcrew passes a 3-step check: Identity Verification (Aadhaar/PAN), a Video Interview for soft skills, and Past Employer Reference checks. You get professionals, not just people looking for cash.",
-    },
-    {
-        question: "Why pay a fee when I can find staff on WhatsApp groups for free?",
-        answer:
-            "WhatsApp is chaotic and unverified. Fastcrew gives you structure: instant replacements, legal invoices for tax, insurance coverage for accidents, and a guaranteed pool of vetted staff so you never scramble on a Friday night again.",
-    },
-
-    // WORKER / TALENT QUESTIONS (The "Earning & Dignity" Angle)
     {
         question: "When do I actually get paid?",
-        answer:
-            "Immediately. On the 'Professional' plan, you get paid via UPI the moment your shift ends. On the free plan, payouts are weekly. No more chasing owners or waiting for 'next month's salary.'",
+        answer: "Same day. Work your shift from 11 AM to 3 PM, and money hits your account by 11 PM that night. No delays, no waiting till Friday. Instant payouts via UPI, bank transfer, or wallet.",
     },
     {
-        question: "Does this count as 'real experience' for my resume?",
-        answer:
-            "Yes. Every shift adds a verified review to your Fastcrew 'Smart Resume'. You can download this PDF to show future employers that you have worked at top venues and have a proven track record.",
+        question: "Are these jobs actually real, or will nobody hire me?",
+        answer: "100% real. Every restaurant and cafe on Fastcrew is verified. We show you their ratings (average 4.2/5). You can see exactly how many workers they've hired before you apply. Verified members get hired 3x faster.",
     },
     {
-        question: "What if I get injured while working a shift?",
-        answer:
-            "We've got your back. Every active shift booked on Fastcrew comes with ₹1 Lakh on-shift accident insurance coverage at no extra cost to you. Your safety is our priority.",
+        question: "What if the restaurant doesn't show up or cancels?",
+        answer: "We have your back. If a restaurant cancels within 2 hours, you get ₹200 cancellation fee. If they don't show up, you earn full shift payment + extra ₹500 compensation. This is guaranteed.",
     },
     {
-        question: "Is this full-time work or just one-off gigs?",
-        answer:
-            "It's whatever you need. Pick up single shifts on your days off to earn extra cash, or stack shifts back-to-back to work full-time hours. You are your own boss—work when you want, where you want.",
+        question: "Do I need 'verification' to work, or can I start immediately?",
+        answer: "You can start immediately for FREE. Verification (₹99, one-time) unlocks premium shifts at top restaurants and guarantees faster hiring. Not required, but highly recommended.",
+    },
+    {
+        question: "Is this safe? Will I get cheated?",
+        answer: "Yes, it's safe. All workers have ₹5,000 accident insurance. You can rate restaurants, and bad ones get removed. We have a 24/7 support team to handle disputes. Zero hidden charges.",
+    },
+    {
+        question: "Can I choose my hours, or do I have to work fixed shifts?",
+        answer: "100% your choice. You see jobs, you decide. Work 2 shifts a day or 1 shift a month. No commitment. No penalties. Zero contracts.",
+    },
+    {
+        question: "I'm not experienced. Can I still get hired?",
+        answer: "Yes! We have jobs for beginners (Dishwasher, Helper, Delivery). Experienced workers earn more, but everyone starts somewhere. Average beginner makes ₹600-800 per 4-hour shift.",
     },
 ];
-
 
 export function FAQ() {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -54,39 +43,40 @@ export function FAQ() {
     };
 
     return (
-        <section className="py-24 bg-background">
-            <div className="container px-4 md:px-6 mx-auto max-w-4xl">
-                <div className="text-center mb-16 space-y-4">
-                    <h2 className="text-primary font-medium tracking-wide uppercase">
-                        Frequently Asked Questions
-                    </h2>
-                    <p className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">
-                        Still have questions about Fastcrew?
-                    </p>
+        <section id="faq" className="py-24 relative bg-transparent overflow-hidden">
+            {/* Dark Mode Top Transition */}
+            <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-transparent to-black dark:block hidden -z-10" />
+            <div className="absolute inset-x-0 bottom-0 top-80 bg-transparent dark:bg-black/95 dark:block hidden -z-20" />
+            <div className="container px-6 mx-auto max-w-4xl">
+                <div className="text-center mb-16">
+                    <motion.h2
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="text-3xl md:text-4xl font-bold text-[#1A1A1A] dark:text-white"
+                    >
+                        We Answer Your Questions
+                    </motion.h2>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-0 border-t border-neutral-200 dark:border-neutral-800">
                     {faqs.map((faq, index) => (
                         <div
                             key={index}
-                            className="group rounded-2xl border border-muted/20 bg-card/50 hover:bg-card/80 transition-all duration-200 overflow-hidden"
+                            className="border-b border-neutral-200 dark:border-neutral-800 bg-transparent"
                         >
                             <button
                                 onClick={() => toggleFAQ(index)}
-                                className="w-full flex items-center justify-between p-6 text-left"
+                                className="w-full flex items-center justify-between py-6 text-left group"
                             >
-                                <span className="text-lg md:text-xl font-medium font-raleway text-foreground group-hover:text-primary transition-colors">
+                                <span className="text-lg font-semibold text-[#1A1A1A] dark:text-gray-200 group-hover:text-[#1DBF73] transition-colors pr-8">
                                     {faq.question}
                                 </span>
-                                <span className="flex-shrink-0 ml-4">
+                                <span className="flex-shrink-0 text-[#404145] dark:text-gray-400 group-hover:text-[#1DBF73] transition-colors">
                                     {openIndex === index ? (
-                                        <div className="h-8 w-8 rounded-full bg-[var(--color-primary)]/20 flex items-center justify-center text-[var(--color-primary)]">
-                                            <X className="h-5 w-5" />
-                                        </div>
+                                        <ChevronUp className="w-5 h-5" />
                                     ) : (
-                                        <div className="h-8 w-8 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-black shadow-lg shadow-[var(--shadow-accent-glow)] group-hover:scale-110 transition-transform">
-                                            <Plus className="h-5 w-5" />
-                                        </div>
+                                        <ChevronDown className="w-5 h-5" />
                                     )}
                                 </span>
                             </button>
@@ -99,10 +89,8 @@ export function FAQ() {
                                         exit={{ height: 0, opacity: 0 }}
                                         transition={{ duration: 0.3, ease: "easeInOut" }}
                                     >
-                                        <div className="px-6 pb-6 pt-0">
-                                            <p className="text-muted-foreground leading-relaxed font-raleway text-green-100">
-                                                {faq.answer}
-                                            </p>
+                                        <div className="pb-6 text-[#666666] dark:text-gray-400 leading-relaxed text-sm md:text-base">
+                                            {faq.answer}
                                         </div>
                                     </motion.div>
                                 )}

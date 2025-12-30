@@ -2,6 +2,7 @@
 CREATE TABLE IF NOT EXISTS talent_waitlist (
   id SERIAL PRIMARY KEY,
   email VARCHAR(255) UNIQUE NOT NULL,
+  phone VARCHAR(20),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   source VARCHAR(100) DEFAULT 'landing_page'
 );
@@ -10,6 +11,7 @@ CREATE TABLE IF NOT EXISTS talent_waitlist (
 CREATE TABLE IF NOT EXISTS partner_waitlist (
   id SERIAL PRIMARY KEY,
   email VARCHAR(255) UNIQUE NOT NULL,
+  phone VARCHAR(20),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   source VARCHAR(100) DEFAULT 'landing_page'
 );

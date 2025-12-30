@@ -13,6 +13,7 @@ export function EarlyAccessModal() {
   const { isOpen, closeModal } = useModal();
   const [role, setRole] = useState<Role | null>(null);
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
@@ -23,6 +24,7 @@ export function EarlyAccessModal() {
     if (isOpen) {
       setRole(null);
       setEmail("");
+      setPhone("");
       setStatus("idle");
       setErrorMessage("");
     }
@@ -46,6 +48,12 @@ export function EarlyAccessModal() {
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const validatePhone = (phone: string) => {
+    // Remove any spaces and check if it's exactly 10 digits
+    const cleanPhone = phone.replace(/\s/g, "");
+    return /^\d{10}$/.test(cleanPhone);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -74,6 +82,11 @@ export function EarlyAccessModal() {
         "\nSupabase is not properly configured.",
         "\nPlease check your environment variables."
       );
+      return;
+    }
+
+    if (!validatePhone(phone)) {
+      setErrorMessage("Please enter a valid 10-digit phone number");
       return;
     }
 
@@ -235,8 +248,9 @@ export function EarlyAccessModal() {
                     </button>
                   </div>
 
-                  {/* Email Input */}
-                  <div className="space-y-2">
+                  {/* Inputs */}
+                  <div className="space-y-3">
+                    {/* Email Input */}
                     <div className="relative">
                       <input
                         type="email"
@@ -255,6 +269,42 @@ export function EarlyAccessModal() {
                         )}
                       />
                       {validateEmail(email) && !errorMessage && (
+                        <motion.div
+                          initial={{ scale: 0, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-green-500"
+                        >
+                          <Check className="w-5 h-5" />
+                        </motion.div>
+                      )}
+                    </div>
+
+                    {/* Phone Input */}
+                    <div className="relative">
+                      <div className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 pointer-events-none">
+                        +91
+                      </div>
+                      <input
+                        type="tel"
+                        placeholder="10-digit phone number"
+                        value={phone}
+                        onChange={(e) => {
+                          // Only allow digits and limit to 10
+                          const value = e.target.value.replace(/\D/g, "");
+                          if (value.length <= 10) {
+                            setPhone(value);
+                            setErrorMessage("");
+                          }
+                        }}
+                        disabled={status === "loading" || status === "success"}
+                        className={cn(
+                          "w-full pl-14 pr-4 py-3.5 rounded-xl bg-neutral-50 dark:bg-white/5 border outline-none transition-all duration-200",
+                          errorMessage && !validatePhone(phone) && phone.length > 0
+                            ? "border-red-500 focus:border-red-500"
+                            : "border-neutral-200 dark:border-white/10 focus:border-[var(--color-primary)]"
+                        )}
+                      />
+                      {validatePhone(phone) && !errorMessage && (
                         <motion.div
                           initial={{ scale: 0, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}

@@ -1,55 +1,63 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useModal } from "@/context/ModalContext";
 
 const plans = [
   {
-    name: "Starter",
+    name: "Basic",
+    subtext: "Free forever",
     price: "₹0",
-    period: "/month",
-    label: "Perfect for trying out the platform",
+    period: "",
     features: [
-      "Weekly Payouts",
-      "Basic Web Profile",
-      "Standard Visibility",
-      "5% Commission",
+      "Basic profile with photo",
+      "Access to all job listings",
+      "Standard job alerts",
+      "Email support",
+      "Get paid by next morning",
     ],
-    button: "Get Started",
+    button: "Sign Up Free",
     popular: false,
+    highlight: false,
   },
   {
-    name: "Professional",
+    name: "Verified Pro",
+    subtext: "Trusted by restaurants",
     price: "₹199",
     period: "/month",
-    label: "For serious freelancers",
     features: [
-      "Instant Daily UPI Payouts",
-      "Smart Profile with Video Intro & More",
-      "Get Hired 3x Faster with Boosts",
-      "0% Commission on Repeat Clients",
-      "Priority Job Alerts",
+      "Verified Pro badge",
+      "See jobs 30 mins early",
+      "Unlimited job alerts + SMS",
+      "Priority in matches (3x callbacks)",
+      "Get paid same day",
+      "24/7 priority support",
+      "₹5,000 on-shift insurance",
     ],
-    button: "Get Started",
+    button: "Upgrade Now",
     popular: true,
+    highlight: true,
   },
   {
-    name: "Enterprise - For Agencies & Event Companies",
-    price: "Custom",
+    name: "For Teams/Agencies",
+    subtext: "Custom bulk hiring",
+    price: "Custom", // Display logic for "Custom Pricing" is needed or string substitution
+    displayPrice: "Custom Pricing",
     period: "",
-    label: "High-volume hiring, guaranteed crews, and deep integrations for serious operators.",
     features: [
-      "Volume-based commission with custom contracts",
-      "Bulk booking for large events and recurring shifts",
-      "Multi-user agency workspace & advanced analytics",
-      "ATS / HR system integrations (API & webhooks)",
-      "Dedicated account manager, 24/7 priority support & fill-rate SLAs",
-      "Ideal for staffing agencies, hotel groups, and event management companies running 100+ shifts/month."
+      "Bulk hire 5+ workers per shift",
+      "Agency workspace",
+      "Dedicated account manager",
+      "Custom contract terms",
+      "Priority support + SLA guarantees",
+      "API access",
+      "Advanced reporting",
     ],
     button: "Contact Sales",
     popular: false,
+    highlight: false,
   },
 ];
 
@@ -57,116 +65,115 @@ export function Pricing() {
   const { openModal } = useModal();
 
   return (
-    <section className="py-24 relative z-10 overflow-hidden">
-      {/* Background Decoration */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-[var(--color-primary)]/5 blur-[120px] rounded-full pointer-events-none" />
+    <section className="py-24 bg-transparent overflow-hidden relative">
+      {/* Smooth Background Transition */}
+      <div className="absolute inset-x-0 top-80 bottom-80 bg-[#F8F8F8] dark:bg-black/20 -z-10" />
+      <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-transparent via-[#F8F8F8]/80 to-[#F8F8F8] dark:via-black/10 dark:to-black/20 -z-10 backdrop-blur-[2px]" />
+      <div className="absolute inset-x-0 bottom-0 h-80 bg-gradient-to-t from-transparent via-[#F8F8F8]/80 to-[#F8F8F8] dark:via-black/10 dark:to-black/20 -z-10" />
 
-      <div className="max-w-6xl px-6 mx-auto relative text-center">
-        <div className="mb-14">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
+      <div className="container px-6 mx-auto max-w-7xl relative z-10">
+        <div className="text-center mb-16">
+          <motion.h4
+            initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-4xl font-bold mb-4 tracking-tight"
+            className="text-[#1DBF73] font-semibold text-xs tracking-[1px] mb-2 uppercase brightness-55 dark:brightness-100"
           >
-            Simple, Transparent Pricing
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            MEMBERSHIP
+          </motion.h4>
+          <motion.h2
+            initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-muted-foreground text-sm md:text-base max-w-xl mx-auto"
+            className="text-3xl md:text-4xl font-bold text-[#1A1A1A] dark:text-white mb-4"
           >
-            Choose the plan that fits your needs. No hidden fees.
+            Work More. Earn More.
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-[#666666] dark:text-gray-400 max-w-lg mx-auto leading-relaxed"
+          >
+            Our verified members get hired 3x faster and access premium shifts.
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
           {plans.map((plan, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              whileHover={{
-                scale: 1.02,
-                y: -8,
-                transition: { duration: 0.3, ease: "easeOut" }
-              }}
-              transition={{
-                delay: index * 0.15,
-                duration: 0.4,
-                ease: "easeOut"
-              }}
+              transition={{ delay: index * 0.15 }}
               className={cn(
-                "glass p-6 rounded-3xl relative flex flex-col h-full group transition-[box-shadow,border-color,background-color] duration-300",
-                "hover:!shadow-[0_20px_40px_-15px_rgba(0,100,255,0.15)] dark:hover:!shadow-[0_20px_40px_-15px_rgba(0,255,136,0.5)]",
-                plan.popular
-                  ? "order-first lg:order-none border-[var(--color-primary)]/40 bg-[var(--color-primary)]/[0.08] shadow-popular z-20 hover:!border-cyan-500 dark:hover:!border-[#00ff88]"
-                  : "border-white/5 hover:border-[var(--color-primary)]/30 z-10",
+                "rounded-xl p-8 relative flex flex-col h-full transition-transform duration-300",
+                plan.highlight
+                  ? "bg-[#1DBF73] text-white shadow-[0_8px_24px_rgba(29,191,115,0.2)] md:-translate-y-4 md:scale-105 z-10 border-2 border-[#1DBF73]"
+                  : "bg-white dark:bg-[#1A1A1A] border border-[#E8E8E8] dark:border-white/10 shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
               )}
             >
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--color-primary)] text-black font-bold px-3 py-1 rounded-full text-[11px] shadow-lg tracking-wider uppercase">
+              {plan.highlight && (
+                <div className="absolute top-0 right-0 -mt-3 -mr-3 md:mt-4 md:mr-4 bg-white/20 backdrop-blur-sm text-white text-[11px] font-semibold px-3 py-1 rounded-full uppercase tracking-wider border border-white/20">
                   Most Popular
                 </div>
               )}
 
-              <h3 className="text-xl font-bold mb-1.5 leading-tight">
-                {plan.name}
-              </h3>
-              <p className="text-muted-foreground text-sm mb-5 leading-relaxed">
-                {plan.label}
-              </p>
-
               <div className="mb-6">
-                <span className="text-4xl font-black tracking-tight">
-                  {plan.price}
-                </span>
-                <span className="text-muted-foreground ml-1 font-medium text-sm">
-                  {plan.period}
-                </span>
+                <h3 className={cn("text-lg font-semibold mb-1", plan.highlight ? "text-white" : "text-[#1A1A1A] dark:text-white")}>
+                  {plan.name}
+                </h3>
+                <p className={cn("text-sm", plan.highlight ? "text-white/80" : "text-[#666666] dark:text-gray-400")}>
+                  {plan.subtext}
+                </p>
+              </div>
+
+              <div className="mb-8">
+                {plan.displayPrice ? (
+                  <span className={cn("text-2xl font-bold", plan.highlight ? "text-white" : "text-[#1A1A1A] dark:text-white")}>
+                    {plan.displayPrice}
+                  </span>
+                ) : (
+                  <>
+                    <span className={cn("text-4xl font-bold", plan.highlight ? "text-white" : "text-[#1DBF73]")}>
+                      {plan.price}
+                    </span>
+                    <span className={cn("text-sm font-medium", plan.highlight ? "text-white/80" : "text-[#666666] dark:text-gray-400")}>
+                      {plan.period}
+                    </span>
+                  </>
+                )}
               </div>
 
               <button
                 onClick={openModal}
                 className={cn(
-                  "w-full py-2.5 rounded-xl font-bold mb-8 transition-all text-sm",
-                  plan.popular
-                    ? "bg-[var(--color-primary)] text-black hover:scale-[1.02] shadow-l3 hover:shadow-l4 active:shadow-l2"
-                    : "bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 shadow-l2 hover:shadow-l3 active:shadow-l1",
+                  "w-full py-3 rounded-lg font-semibold mb-8 transition-colors text-sm",
+                  plan.highlight
+                    ? "bg-white text-[#1DBF73] hover:shadow-lg"
+                    : "bg-transparent border-2 border-[#404145] dark:border-gray-500 text-[#404145] dark:text-gray-200 hover:bg-[#F8F8F8] dark:hover:bg-white/5",
+                  plan.name.includes("Teams") && "border-[#1DBF73] text-[#1DBF73] hover:bg-[#F0F7F4] dark:hover:bg-[#1DBF73]/10"
                 )}
               >
                 {plan.button}
               </button>
 
-              <ul className="space-y-3">
+              <ul className="space-y-4 flex-1">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <div
+                    <Check
                       className={cn(
-                        "w-4.5 h-4.5 rounded-full flex items-center justify-center shrink-0 mt-0.5",
-                        plan.popular
-                          ? "bg-[var(--color-primary)] text-black"
-                          : "bg-[var(--color-primary)]/20",
+                        "w-5 h-5 shrink-0",
+                        plan.highlight ? "text-white" : "text-[#1DBF73]"
                       )}
-                    >
-                      <Check
-                        className={cn(
-                          "w-3 h-3",
-                          plan.popular
-                            ? "text-black"
-                            : "text-[var(--color-primary)]",
-                        )}
-                      />
-                    </div>
+                    />
                     <span
                       className={cn(
                         "text-sm leading-snug",
-                        plan.popular
-                          ? "text-foreground font-medium"
-                          : "text-muted-foreground",
+                        plan.highlight ? "text-white" : "text-[#666666] dark:text-gray-400"
                       )}
                     >
                       {feature}

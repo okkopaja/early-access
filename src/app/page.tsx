@@ -1,24 +1,23 @@
-import { Navbar } from "@/components/Navbar"
-import { Hero } from "@/components/Hero"
-import { Features } from "@/components/Features"
-import { Pricing } from "@/components/Pricing"
-import { FAQ } from "@/components/FAQ"
-import { Cta } from "@/components/Cta"
-import { Footer } from "@/components/Footer"
-import { BackgroundBeams } from "@/components/ui/background-beams"
+"use client";
+
+import { Navbar } from "@/components/Navbar";
+import { Hero } from "@/components/Hero";
+import { Features } from "@/components/Features";
+import { LiveOpportunities } from "@/components/LiveOpportunities";
+import { Pricing } from "@/components/Pricing";
+import { FAQ } from "@/components/FAQ";
+import { Footer } from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-[var(--color-primary)] selection:text-black">
-      <BackgroundBeams />
+    <main className="min-h-screen bg-transparent dark:bg-black text-[#1A1A1A] dark:text-white overflow-x-hidden selection:bg-[#1DBF73] selection:text-white">
       <Navbar />
       <Hero />
+      <LiveOpportunities />
       <Features />
       <Pricing />
       <FAQ />
-      <Cta />
       <Footer />
-
     </main>
-  )
+  );
 }
