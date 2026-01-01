@@ -1,75 +1,166 @@
-"use client";
+import { useState, useMemo, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { JobFilterSidebar } from "./JobFilterSidebar";
+import { JobSearchHeader } from "./JobSearchHeader";
+import { JobCard } from "./JobCard";
+import { MOCK_JOBS } from "@/data/mockJobs";
 
-import { motion } from "framer-motion";
-import { Star, MapPin, Clock, Building2 } from "lucide-react";
-import { useModal } from "@/context/ModalContext";
+export type SortOption = "Most Relevant" | "Most Recent" | "Highest Paid" | "Lowest Paid";
 
-const jobs = [
-    {
-        id: 1,
-        title: "Head Chef",
-        restaurant: "Peter Cat",
-        logo_bg: "bg-red-100",
-        rating: 4.8,
-        rate: "₹1200-1500",
-        duration: "Shift (8hrs)",
-        location: "Park Street",
-        posted: "15 mins ago",
-    },
-    {
-        id: 2,
-        title: "Barista",
-        restaurant: "Blue Tokai",
-        logo_bg: "bg-blue-100",
-        rating: 4.6,
-        rate: "₹700-900",
-        duration: "Shift (6hrs)",
-        location: "Ballygunge",
-        posted: "30 mins ago",
-    },
-    {
-        id: 3,
-        title: "Wait Staff",
-        restaurant: "Mocambo",
-        logo_bg: "bg-yellow-100",
-        rating: 4.7,
-        rate: "₹600-800",
-        duration: "Shift (5hrs)",
-        location: "Park Street",
-        posted: "45 mins ago",
-    },
-    {
-        id: 4,
-        title: "Kitchen Helper",
-        restaurant: "Arsalan",
-        logo_bg: "bg-green-100",
-        rating: 4.5,
-        rate: "₹500-700",
-        duration: "Shift (4hrs)",
-        location: "Park Circus",
-        posted: "1 hr ago",
-    },
-    {
-        id: 5,
-        title: "Delivery Partner",
-        restaurant: "Dominos",
-        logo_bg: "bg-blue-500",
-        rating: 4.3,
-        rate: "₹400-600",
-        duration: "Shift (4hrs)",
-        location: "Salt Lake",
-        posted: "2 hrs ago",
-    }
-];
+export interface JobFilters {
+    search: string;
+    employmentType: string[];
+    salaryRange: string[];
+    location: string[];
+    role: string[];
+}
 
 export function LiveOpportunities() {
-    const { openModal } = useModal();
+    const [sortBy, setSortBy] = useState<SortOption>("Most Recent");
+    const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+    const [filters, setFilters] = useState<JobFilters>({
+        search: "",
+        employmentType: [],
+        salaryRange: [],
+        location: [],
+        role: [],
+    });
+
+    // Prevent scrolling when mobile filters are open
+    useEffect(() => {
+        if (isMobileFiltersOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "unset";
+        }
+        return () => {
+            document.body.style.overflow = "unset";
+        }
+    }, [isMobileFiltersOpen]);
+
+    const filteredAndSortedJobs = useMemo(() => {
+        let jobs = [...MOCK_JOBS];
+
+        // 1. Search Filter
+        if (filters.search) {
+            const query = filters.search.toLowerCase();
+            jobs = jobs.filter(job =>
+                job.title.toLowerCase().includes(query) ||
+                job.company.toLowerCase().includes(query) ||
+                job.tags.some(tag => tag.toLowerCase().includes(query))
+            );
+        }
+
+        // 2. Employment Type Filter
+        if (filters.employmentType.length > 0) {
+            jobs = jobs.filter(job => filters.employmentType.includes(job.type));
+        }
+
+        // 3. Location Filter
+        if (filters.location.length > 0) {
+            jobs = jobs.filter(job => filters.location.includes(job.location));
+        }
+
+        // 4. Role Filter (checking against title and tags for now)
+        if (filters.role.length > 0) {
+            jobs = jobs.filter(job =>
+                filters.role.some(role =>
+                    job.title.toLowerCase().includes(role.toLowerCase()) ||
+                    job.tags.some(tag => tag.toLowerCase().includes(role.toLowerCase()))
+                )
+            );
+        }
+
+        // 5. Salary Range Filter
+        if (filters.salaryRange.length > 0) {
+            jobs = jobs.filter(job => {
+                return filters.salaryRange.some(range => {
+                    if (range === "₹500 - ₹1000 / shift") return job.salary.includes("/shift");
+                    if (range === "₹10k - ₹15k / month") return job.salaryValue >= 10000 && job.salaryValue <= 15000;
+                    if (range === "₹15k - ₹25k / month") return job.salaryValue > 15000 && job.salaryValue <= 25000;
+                    if (range === "₹25k+ / month") return job.salaryValue > 25000;
+                    return true;
+                });
+            });
+        }
+
+        // 6. Sorting
+        switch (sortBy) {
+            case "Most Recent":
+                return jobs.sort((a, b) => b.postedAt.getTime() - a.postedAt.getTime());
+            case "Highest Paid":
+                return jobs.sort((a, b) => b.salaryValue - a.salaryValue);
+            case "Lowest Paid":
+                return jobs.sort((a, b) => a.salaryValue - b.salaryValue);
+            case "Most Relevant":
+            default:
+                return jobs;
+        }
+    }, [sortBy, filters]);
+
+    const handleFilterChange = (key: keyof JobFilters, value: string) => {
+        setFilters(prev => {
+            if (key === 'search') return { ...prev, search: value };
+
+            const current = prev[key] as string[];
+            const updated = current.includes(value)
+                ? current.filter(item => item !== value)
+                : [...current, value];
+
+            return { ...prev, [key]: updated };
+        });
+    };
+
+    const clearFilters = () => {
+        setFilters({
+            search: "",
+            employmentType: [],
+            salaryRange: [],
+            location: [],
+            role: [],
+        });
+    };
 
     return (
         <section className="py-24 relative bg-transparent overflow-hidden">
+            {/* Mobile Filter Sidebar Overlay */}
+            <AnimatePresence>
+                {isMobileFiltersOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 lg:hidden"
+                    >
+                        {/* Backdrop */}
+                        <div
+                            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+                            onClick={() => setIsMobileFiltersOpen(false)}
+                        />
+
+                        {/* Sidebar */}
+                        <motion.div
+                            initial={{ x: "100%" }}
+                            animate={{ x: 0 }}
+                            exit={{ x: "100%" }}
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            className="absolute right-0 top-0 bottom-0 w-[85%] max-w-[320px] bg-white dark:bg-[#1A1A1A] h-full overflow-y-auto shadow-2xl"
+                        >
+                            <JobFilterSidebar
+                                filters={filters}
+                                onFilterChange={handleFilterChange}
+                                onClear={clearFilters}
+                                onClose={() => setIsMobileFiltersOpen(false)}
+                            />
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             {/* Dark Mode Top Transition */}
             <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-transparent to-black dark:block hidden -z-10" />
             <div className="absolute inset-x-0 bottom-0 top-80 bg-transparent dark:bg-black/90 dark:block hidden -z-20" />
+
             <div className="container px-6 mx-auto max-w-7xl">
                 <div className="text-center mb-16">
                     <motion.h2
@@ -78,7 +169,7 @@ export function LiveOpportunities() {
                         viewport={{ once: true }}
                         className="text-3xl md:text-4xl font-bold text-[#1A1A1A] dark:text-white mb-4"
                     >
-                        Jobs Available Right Now in Kolkata
+                        Jobs Available Right Now
                     </motion.h2>
                     <motion.p
                         initial={{ opacity: 0, y: 10 }}
@@ -87,80 +178,47 @@ export function LiveOpportunities() {
                         transition={{ delay: 0.1 }}
                         className="text-[#666666] dark:text-gray-400 text-lg"
                     >
-                        Scroll through real jobs posted by verified restaurants and cafes.
+                        Explore real opportunities from verified employers.
                     </motion.p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {jobs.map((job, index) => (
-                        <motion.div
-                            key={job.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1 }}
-                            whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                            className="bg-white dark:bg-[#1A1A1A] rounded-xl border border-neutral-100 dark:border-white/10 p-6 hover:border-emerald-400 hover:shadow-lg ring-1 ring-inset ring-transparent hover:ring-white/50 transition-all duration-200 group cursor-pointer"
-                            onClick={openModal}
-                        >
-                            <div className="flex items-start justify-between mb-4">
-                                <div className="flex items-center gap-3">
-                                    <div className={`w-12 h-12 rounded-lg ${job.logo_bg} flex items-center justify-center text-xl font-bold text-gray-700`}>
-                                        {job.restaurant.charAt(0)}
-                                    </div>
-                                    <div>
-                                        <h3 className="font-bold text-[#1A1A1A] dark:text-white text-base">
-                                            {job.restaurant}
-                                        </h3>
-                                        <div className="flex items-center gap-1 text-xs font-semibold text-[#1A1A1A] dark:text-gray-300">
-                                            <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                                            {job.rating}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                <div className="flex flex-col lg:flex-row gap-8">
+                    <div className="hidden lg:block w-1/4 shrink-0">
+                        <JobFilterSidebar
+                            filters={filters}
+                            onFilterChange={handleFilterChange}
+                            onClear={clearFilters}
+                        />
+                    </div>
 
-                            <div className="mb-4">
-                                <h4 className="text-lg font-bold text-[#1A1A1A] dark:text-white mb-2">{job.title}</h4>
-                                <div className="flex items-center gap-3 text-sm text-[#666666] dark:text-gray-400 mb-2">
-                                    <div className="px-2 py-1 bg-[#F0F7F4] dark:bg-white/5 text-[#1DBF73] rounded font-semibold text-xs">
-                                        {job.rate}
-                                    </div>
-                                    <span className="text-xs">{job.duration}</span>
-                                </div>
-                                <div className="flex items-center gap-1 text-sm text-[#666666] dark:text-gray-400">
-                                    <MapPin className="w-3.5 h-3.5" />
-                                    {job.location}
-                                </div>
-                            </div>
+                    {/* Right Content */}
+                    <div className="flex-1">
+                        <JobSearchHeader
+                            sortBy={sortBy}
+                            onSortChange={setSortBy}
+                            search={filters.search}
+                            onSearchChange={(val) => handleFilterChange('search', val)}
+                            onOpenFilters={() => setIsMobileFiltersOpen(true)}
+                        />
 
-                            <div className="flex items-center justify-between pt-4 border-t border-[#E8E8E8] dark:border-white/10">
-                                <div className="flex items-center gap-1.5 text-xs text-[#999999]">
-                                    <span className="w-2 h-2 rounded-full bg-[#1DBF73] animate-pulse" />
-                                    {job.posted}
+                        <div className="flex flex-col gap-4">
+                            {filteredAndSortedJobs.length > 0 ? (
+                                filteredAndSortedJobs.map((job) => (
+                                    <JobCard key={job.id} job={job} />
+                                ))
+                            ) : (
+                                <div className="text-center py-20 bg-white dark:bg-[#1A1A1A] rounded-xl border border-dashed border-gray-300 dark:border-white/10">
+                                    <p className="text-[#666666] dark:text-gray-400">No jobs found matching your criteria.</p>
+                                    <button
+                                        onClick={clearFilters}
+                                        className="mt-4 text-[#1DBF73] font-semibold hover:underline"
+                                    >
+                                        Clear all filters
+                                    </button>
                                 </div>
-                                <button className="text-[#1DBF73] font-semibold text-sm hover:underline">
-                                    Apply Now
-                                </button>
-                            </div>
-                        </motion.div>
-                    ))}
-
-                    {/* View More Card */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.6 }}
-                        className="bg-[#F8F8F8] dark:bg-white/5 rounded-xl border border-dashed border-[#E8E8E8] dark:border-white/10 p-6 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-[#F0F7F4] transition-colors group"
-                        onClick={openModal}
-                    >
-                        <div className="w-12 h-12 rounded-full bg-white dark:bg-white/10 flex items-center justify-center mb-3 shadow-sm group-hover:scale-110 transition-transform">
-                            <Building2 className="w-6 h-6 text-[#1DBF73]" />
+                            )}
                         </div>
-                        <h3 className="font-bold text-[#1A1A1A] dark:text-white mb-1 group-hover:text-[#1DBF73] group-hover:brightness-50 dark:group-hover:brightness-75 transition-colors">View All Jobs</h3>
-                        <p className="text-xs text-[#666666] dark:text-gray-400">340+ active listings</p>
-                    </motion.div>
+                    </div>
                 </div>
             </div>
         </section>
